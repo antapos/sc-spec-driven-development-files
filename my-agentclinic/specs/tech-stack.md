@@ -16,7 +16,9 @@ SQLite via `better-sqlite3` — simple, file-based, zero infrastructure. Suffici
 Server-rendered HTML using Hono's JSX support. No separate frontend framework — keeps the stack unified and deployable as a single Node.js process.
 
 ## Styling
-Plain CSS. Responsive design is a baseline requirement — all pages must adapt to mobile, tablet, and desktop viewports. Every page includes the viewport meta tag and uses fluid-width containers so no layout breaks on small screens. More elaborate visual polish is added in later phases.
+**PicoCSS** — minimal semantic CSS framework. Provides responsive design, a sensible CSS reset, typography, and basic UI components (forms, buttons, cards) out of the box with no class names required on semantic HTML. Loaded via CDN `<link>` in every page `<head>`.
+
+Responsive design is a baseline requirement — all pages must include the viewport meta tag and render correctly across mobile, tablet, and desktop viewports. PicoCSS satisfies the fluid-layout and box-model requirements automatically.
 
 ## Testing
 **Vitest** — used for all automated tests. Co-located with source files or in a `tests/` directory. Run via `npm test`.

@@ -2,7 +2,7 @@
 
 ## Scope
 
-Wire up the SQLite database, define all four core tables, seed them with playful sample data, and expose full CRUD JSON endpoints for each resource. The plain-text smoke-test route from Phase 1 is removed once the database is confirmed working.
+Wire up the SQLite database, define all four core tables, seed them with playful sample data, and expose full CRUD JSON endpoints for each resource. The plain-text smoke-test route from Phase 1 is removed once the database is confirmed working. PicoCSS is added to the home page, replacing the hand-rolled inline CSS baseline from Phase 1.
 
 ## New dependencies
 
@@ -81,6 +81,16 @@ Playful and clinic-appropriate. Examples:
 - **Ailments**: "Context Collapse", "Hallucination Fatigue", "Token Anxiety", "Prompt Injection Trauma"
 - **Therapies**: "Grounding Meditation", "Boundary Setting Workshop", "Context Window Yoga", "Inference Detox"
 - **Appointments**: mix of statuses linking the seeded agents, ailments, and therapies
+
+## Styling
+
+PicoCSS replaces the inline CSS baseline written in Phase 1. Add it as a CDN `<link>` in `app.tsx` and remove the `<style>` block:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+```
+
+No additional CSS is needed for the responsive baseline — PicoCSS handles it automatically.
 
 ## Decisions
 
