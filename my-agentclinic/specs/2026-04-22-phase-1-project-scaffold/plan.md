@@ -32,6 +32,8 @@
 8. Create `src/app.tsx`:
    - Import `Hono` and create an `app` instance.
    - Add a `GET /` route that composes `Header`, `Main`, and `Footer` into a full HTML page with title **AgentClinic**.
+   - Include the viewport meta tag: `<meta name="viewport" content="width=device-width, initial-scale=1.0">`.
+   - Include an inline `<style>` block with the responsive baseline: `box-sizing: border-box` globally, and a fluid max-width container on `body`.
    - Export `app`.
 
 ## Group 6 — Wire up src/index.ts as server entry point

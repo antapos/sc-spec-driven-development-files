@@ -16,7 +16,7 @@ SQLite via `better-sqlite3` — simple, file-based, zero infrastructure. Suffici
 Server-rendered HTML using Hono's JSX support. No separate frontend framework — keeps the stack unified and deployable as a single Node.js process.
 
 ## Styling
-Plain CSS with a modern, clean aesthetic to satisfy marketing's requirement for an attractive, browser-compatible UI.
+Plain CSS. Responsive design is a baseline requirement — all pages must adapt to mobile, tablet, and desktop viewports. Every page includes the viewport meta tag and uses fluid-width containers so no layout breaks on small screens. More elaborate visual polish is added in later phases.
 
 ## Testing
 **Vitest** — used for all automated tests. Co-located with source files or in a `tests/` directory. Run via `npm test`.

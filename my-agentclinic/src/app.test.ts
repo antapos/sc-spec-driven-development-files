@@ -12,4 +12,10 @@ describe('GET /', () => {
     const body = await res.text()
     expect(body).toContain('AgentClinic')
   })
+
+  it('includes viewport meta tag', async () => {
+    const res = await app.request('/')
+    const body = await res.text()
+    expect(body).toContain('width=device-width')
+  })
 })

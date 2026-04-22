@@ -3,7 +3,7 @@
 Small, focused phases. Each phase produces a working, committed state.
 
 ## Phase 1 — Project scaffold ✅
-Add Hono, better-sqlite3, and tsx. Update `package.json` scripts. Confirm `tsc` passes.
+Add Hono, better-sqlite3, and tsx. Update `package.json` scripts. Confirm `tsc` passes. Establish responsive design baseline (viewport meta tag, fluid layout CSS) applied to the home page.
 
 ## Phase 2 — Hello server
 Minimal Hono app listening on a port. One route returning plain text. Verify with `curl`.
@@ -30,4 +30,4 @@ CRUD routes for agents, ailments, therapies, and appointments. JSON responses.
 Server-rendered HTML dashboard using Hono JSX. Lists agents and upcoming appointments.
 
 ## Phase 10 — Styling & polish
-CSS for a clean, modern look. Navigation between views. Responsive layout.
+CSS for a clean, modern look. Navigation between views.

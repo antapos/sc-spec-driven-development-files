@@ -45,7 +45,17 @@ The split between `app.ts` and `index.ts` is required so tests can import the ap
 | Required content | HTML page with title and `<h1>` both set to **AgentClinic** |
 | Server | `@hono/node-server`, port **3000** |
 
-The page content is intentionally minimal — no CSS, no assets. Purpose is to confirm the server starts and serves a real response.
+## Responsive design
+
+All pages must satisfy the responsive design baseline established in Phase 1:
+
+| Requirement | Implementation |
+|---|---|
+| Viewport meta tag | `<meta name="viewport" content="width=device-width, initial-scale=1.0">` present in every `<head>` |
+| Fluid container | Page body uses a max-width container with horizontal auto margins — no fixed pixel widths that overflow on small screens |
+| Box model | `box-sizing: border-box` applied globally |
+
+This baseline is the minimum to make layouts usable on mobile. Visual polish (colours, typography, spacing) is deferred to later phases.
 
 ## Decisions
 
