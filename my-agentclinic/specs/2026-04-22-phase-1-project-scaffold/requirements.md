@@ -2,7 +2,7 @@
 
 ## Scope
 
-Install the three runtime dependencies (Hono, better-sqlite3, tsx) and wire up the standard npm scripts so the project has a working dev/build/start lifecycle. No application logic is added in this phase.
+Install runtime dependencies (Hono, better-sqlite3) and dev tooling (tsx, vitest), wire up the standard npm scripts, and deliver a home page with a passing test suite.
 
 ## Dependencies to install
 
@@ -10,19 +10,28 @@ Install the three runtime dependencies (Hono, better-sqlite3, tsx) and wire up t
 |---|---|---|
 | `hono` | runtime | Web framework |
 | `better-sqlite3` | runtime | SQLite driver |
+| `@hono/node-server` | runtime | Node.js HTTP adapter for Hono |
 | `tsx` | dev | Zero-build local development |
+| `vitest` | dev | Test runner |
 
 ## Package.json scripts
 
 ```json
 "dev":   "tsx watch src/index.ts",
 "build": "tsc",
-"start": "node dist/index.js"
+"start": "node dist/index.js",
+"test":  "vitest run"
 ```
 
-## Entry point
+## Source files
 
-`src/index.ts` — must be a real Hono application (not a stub) that passes `tsc` strict-mode checks.
+| File | Role |
+|---|---|
+| `src/app.ts` | Defines and exports the Hono `app` instance — importable by tests |
+| `src/index.ts` | Server entry point — imports `app` and calls `serve()` on port 3000 |
+| `src/app.test.ts` | Vitest tests for all routes defined in `app.ts` |
+
+The split between `app.ts` and `index.ts` is required so tests can import the app without starting a real HTTP server.
 
 ## Home page
 
@@ -37,10 +46,11 @@ The page content is intentionally minimal — no CSS, no assets. Purpose is to c
 
 ## Decisions
 
-- Entry point lives at `src/index.ts` (not project root `index.ts`).
+- App logic lives in `src/app.ts`, not `src/index.ts`, so tests can import the app without side effects.
 - No `src/db.ts` or database initialisation in this phase.
 - No `@types/better-sqlite3` required by scope (can be added in Phase 3 if tsc complains).
 - `@hono/node-server` is the only way to call `serve()` in Node.js; it is a separate package (not bundled with `hono`).
+- Tests use `app.request()` — Hono's built-in test helper — so no real HTTP server or port binding is needed in tests.
 
 ## Context
 

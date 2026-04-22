@@ -18,6 +18,10 @@ Server-rendered HTML using Hono's JSX support. No separate frontend framework â€
 ## Styling
 Plain CSS with a modern, clean aesthetic to satisfy marketing's requirement for an attractive, browser-compatible UI.
 
+## Testing
+**Vitest** â€” used for all automated tests. Co-located with source files or in a `tests/` directory. Run via `npm test`.
+
 ## Tooling
 - `tsc` for type-checking and compilation
 - `tsx` for local development (no build step required while iterating)
+- `vitest` for test execution
