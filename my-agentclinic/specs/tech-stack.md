@@ -1,29 +1,33 @@
 # Tech Stack
 
-## Language
-TypeScript (strict mode) throughout — server and any shared types.
+## Runtime & Language
 
-## Runtime
-Node.js
+- **Node.js** — server runtime
+- **TypeScript** — language across the entire codebase (server + templates)
 
-## Framework
-**Hono** — recommended for its TypeScript-first API, minimal overhead, and excellent developer experience. Runs natively on Node.js and is well-suited for building dashboards and REST endpoints.
+## Server Framework
+
+- **Hono** — lightweight, TypeScript-first web framework
+- **@hono/node-server** — Node.js adapter for Hono
+
+## Rendering
+
+- **Hono JSX** — server-side JSX rendering; no client-side framework
+- All HTML is rendered on the server and delivered as full pages
 
 ## Database
-SQLite via `better-sqlite3` — simple, file-based, zero infrastructure. Sufficient for the clinic's data needs.
 
-## Frontend
-Server-rendered HTML using Hono's JSX support. No separate frontend framework — keeps the stack unified and deployable as a single Node.js process.
+- **SQLite** via **better-sqlite3** — embedded, file-based relational database; no separate database server required
 
 ## Styling
-**PicoCSS** — minimal semantic CSS framework. Provides responsive design, a sensible CSS reset, typography, and basic UI components (forms, buttons, cards) out of the box with no class names required on semantic HTML. Loaded via CDN `<link>` in every page `<head>`.
 
-Responsive design is a baseline requirement — all pages must include the viewport meta tag and render correctly across mobile, tablet, and desktop viewports. PicoCSS satisfies the fluid-layout and box-model requirements automatically.
+- **PicoCSS** — classless CSS framework loaded from CDN; semantic HTML is styled automatically with no utility classes needed
 
 ## Testing
-**Vitest** — used for all automated tests. Co-located with source files or in a `tests/` directory. Run via `npm test`.
 
-## Tooling
-- `tsc` for type-checking and compilation
-- `tsx` for local development (no build step required while iterating)
-- `vitest` for test execution
+- **Vitest** — unit and integration test runner; tests live alongside source files
+
+## Developer Experience
+
+- **tsx** — TypeScript execution for development (`tsx watch`) without a build step
+- **tsc** — TypeScript compiler for production builds
