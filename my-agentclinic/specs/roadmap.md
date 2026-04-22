@@ -2,7 +2,7 @@
 
 Small, focused phases. Each phase produces a working, committed state.
 
-## Phase 1 — Project scaffold
+## Phase 1 — Project scaffold ✅
 Add Hono, better-sqlite3, and tsx. Update `package.json` scripts. Confirm `tsc` passes.
 
 ## Phase 2 — Hello server
