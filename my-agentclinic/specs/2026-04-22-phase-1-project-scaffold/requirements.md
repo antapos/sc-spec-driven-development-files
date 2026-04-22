@@ -27,11 +27,14 @@ Install runtime dependencies (Hono, better-sqlite3) and dev tooling (tsx, vitest
 
 | File | Role |
 |---|---|
-| `src/app.ts` | Defines and exports the Hono `app` instance — importable by tests |
+| `src/app.tsx` | Defines and exports the Hono `app` instance — importable by tests |
 | `src/index.ts` | Server entry point — imports `app` and calls `serve()` on port 3000 |
-| `src/app.test.ts` | Vitest tests for all routes defined in `app.ts` |
+| `src/app.test.ts` | Vitest tests for all routes defined in `app.tsx` |
+| `src/components/header.tsx` | `Header` JSX component — site header rendered on every page |
+| `src/components/footer.tsx` | `Footer` JSX component — site footer rendered on every page |
+| `src/components/main.tsx` | `Main` JSX component — wraps the per-page body content |
 
-The split between `app.ts` and `index.ts` is required so tests can import the app without starting a real HTTP server.
+The split between `app.ts` and `index.ts` is required so tests can import the app without starting a real HTTP server. Components are `.tsx` files using Hono's JSX support and composed inside route handlers.
 
 ## Home page
 
@@ -47,6 +50,8 @@ The page content is intentionally minimal — no CSS, no assets. Purpose is to c
 ## Decisions
 
 - App logic lives in `src/app.ts`, not `src/index.ts`, so tests can import the app without side effects.
+- UI is split into three component files (`header.tsx`, `footer.tsx`, `main.tsx`) so each structural region can evolve independently across phases.
+- Components use Hono's built-in JSX support (`hono/jsx`); `tsconfig.json` must set `"jsx": "react-jsx"` and `"jsxImportSource": "hono/jsx"`. Test files are excluded from `tsc` compilation (they are not emitted to `dist/`) — Vitest transpiles them independently.
 - No `src/db.ts` or database initialisation in this phase.
 - No `@types/better-sqlite3` required by scope (can be added in Phase 3 if tsc complains).
 - `@hono/node-server` is the only way to call `serve()` in Node.js; it is a separate package (not bundled with `hono`).
