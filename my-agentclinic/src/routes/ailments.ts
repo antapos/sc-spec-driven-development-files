@@ -14,7 +14,10 @@ ailments.get('/:id', (c) => {
 })
 
 ailments.post('/', async (c) => {
-  const { name, description } = await c.req.json<Omit<Ailment, 'id'>>()
+  let body: Omit<Ailment, 'id'>
+  try { body = await c.req.json<Omit<Ailment, 'id'>>() } catch { return c.json({ error: 'Invalid JSON' }, 400) }
+  const { name, description } = body
+  if (!name || !description) return c.json({ error: 'Missing required fields' }, 400)
   const result = db.prepare('INSERT INTO ailments (name, description) VALUES (?, ?)').run(name, description)
   return c.json(db.prepare('SELECT * FROM ailments WHERE id = ?').get(result.lastInsertRowid), 201)
 })
@@ -22,7 +25,10 @@ ailments.post('/', async (c) => {
 ailments.put('/:id', async (c) => {
   const id = c.req.param('id')
   if (!db.prepare('SELECT id FROM ailments WHERE id = ?').get(id)) return c.json({ error: 'Not found' }, 404)
-  const { name, description } = await c.req.json<Omit<Ailment, 'id'>>()
+  let body: Omit<Ailment, 'id'>
+  try { body = await c.req.json<Omit<Ailment, 'id'>>() } catch { return c.json({ error: 'Invalid JSON' }, 400) }
+  const { name, description } = body
+  if (!name || !description) return c.json({ error: 'Missing required fields' }, 400)
   db.prepare('UPDATE ailments SET name = ?, description = ? WHERE id = ?').run(name, description, id)
   return c.json(db.prepare('SELECT * FROM ailments WHERE id = ?').get(id))
 })
@@ -30,6 +36,10 @@ ailments.put('/:id', async (c) => {
 ailments.delete('/:id', (c) => {
   const id = c.req.param('id')
   if (!db.prepare('SELECT id FROM ailments WHERE id = ?').get(id)) return c.json({ error: 'Not found' }, 404)
-  db.prepare('DELETE FROM ailments WHERE id = ?').run(id)
+  try {
+    db.prepare('DELETE FROM ailments WHERE id = ?').run(id)
+  } catch {
+    return c.json({ error: 'Cannot delete: ailment has appointments' }, 409)
+  }
   return c.json({ deleted: true })
 })

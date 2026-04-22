@@ -21,7 +21,10 @@ appointments.get('/:id', (c) => {
 })
 
 appointments.post('/', async (c) => {
-  const { agent_id, ailment_id, therapy_id, scheduled_at, status } = await c.req.json<Omit<Appointment, 'id'>>()
+  let body: Omit<Appointment, 'id'>
+  try { body = await c.req.json<Omit<Appointment, 'id'>>() } catch { return c.json({ error: 'Invalid JSON' }, 400) }
+  const { agent_id, ailment_id, therapy_id, scheduled_at, status } = body
+  if (!agent_id || !ailment_id || !therapy_id || !scheduled_at || !status) return c.json({ error: 'Missing required fields' }, 400)
   const result = db.prepare(
     'INSERT INTO appointments (agent_id, ailment_id, therapy_id, scheduled_at, status) VALUES (?, ?, ?, ?, ?)'
   ).run(agent_id, ailment_id, therapy_id, scheduled_at, status)
@@ -31,7 +34,10 @@ appointments.post('/', async (c) => {
 appointments.put('/:id', async (c) => {
   const id = c.req.param('id')
   if (!db.prepare('SELECT id FROM appointments WHERE id = ?').get(id)) return c.json({ error: 'Not found' }, 404)
-  const { agent_id, ailment_id, therapy_id, scheduled_at, status } = await c.req.json<Omit<Appointment, 'id'>>()
+  let body: Omit<Appointment, 'id'>
+  try { body = await c.req.json<Omit<Appointment, 'id'>>() } catch { return c.json({ error: 'Invalid JSON' }, 400) }
+  const { agent_id, ailment_id, therapy_id, scheduled_at, status } = body
+  if (!agent_id || !ailment_id || !therapy_id || !scheduled_at || !status) return c.json({ error: 'Missing required fields' }, 400)
   db.prepare(
     'UPDATE appointments SET agent_id = ?, ailment_id = ?, therapy_id = ?, scheduled_at = ?, status = ? WHERE id = ?'
   ).run(agent_id, ailment_id, therapy_id, scheduled_at, status, id)

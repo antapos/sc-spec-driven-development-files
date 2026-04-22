@@ -26,10 +26,18 @@ const newAppt = () => ({
 })
 
 describe('GET /api/appointments', () => {
-  it('returns 200 and a JSON array', async () => {
+  it('returns 200 and empty array when no appointments', async () => {
     const res = await app.request('/api/appointments')
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual([])
+  })
+
+  it('returns all appointments', async () => {
+    db.prepare('INSERT INTO appointments (agent_id, ailment_id, therapy_id, scheduled_at, status) VALUES (?, ?, ?, ?, ?)').run(agentId, ailmentId, therapyId, '2026-05-01T10:00:00', 'scheduled')
+    const res = await app.request('/api/appointments')
+    const body = await res.json() as { status: string }[]
+    expect(body).toHaveLength(1)
+    expect(body[0].status).toBe('scheduled')
   })
 })
 
@@ -41,9 +49,30 @@ describe('POST /api/appointments', () => {
       body: JSON.stringify(newAppt()),
     })
     expect(res.status).toBe(201)
-    const body = await res.json() as { id: number; status: string }
+    const body = await res.json() as { id: number; agent_id: number; ailment_id: number; therapy_id: number; scheduled_at: string; status: string }
     expect(body.status).toBe('scheduled')
+    expect(body.agent_id).toBe(agentId)
+    expect(body.ailment_id).toBe(ailmentId)
+    expect(body.therapy_id).toBe(therapyId)
     expect(body.id).toBeDefined()
+  })
+
+  it('returns 400 for missing required fields', async () => {
+    const res = await app.request('/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    })
+    expect(res.status).toBe(400)
+  })
+
+  it('returns 400 for invalid JSON', async () => {
+    const res = await app.request('/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: 'not json',
+    })
+    expect(res.status).toBe(400)
   })
 })
 
@@ -63,7 +92,7 @@ describe('GET /api/appointments/:id', () => {
 })
 
 describe('PUT /api/appointments/:id', () => {
-  it('updates and returns the appointment', async () => {
+  it('updates and returns the full appointment shape', async () => {
     const { lastInsertRowid } = db.prepare(
       'INSERT INTO appointments (agent_id, ailment_id, therapy_id, scheduled_at, status) VALUES (?, ?, ?, ?, ?)'
     ).run(agentId, ailmentId, therapyId, '2026-05-01T10:00:00', 'scheduled')
@@ -73,7 +102,7 @@ describe('PUT /api/appointments/:id', () => {
       body: JSON.stringify({ ...newAppt(), status: 'completed' }),
     })
     expect(res.status).toBe(200)
-    expect((await res.json() as { status: string }).status).toBe('completed')
+    expect(await res.json()).toMatchObject({ id: Number(lastInsertRowid), agent_id: agentId, ailment_id: ailmentId, therapy_id: therapyId, status: 'completed' })
   })
 
   it('returns 404 when not found', async () => {
@@ -83,6 +112,18 @@ describe('PUT /api/appointments/:id', () => {
       body: JSON.stringify(newAppt()),
     })
     expect(res.status).toBe(404)
+  })
+
+  it('returns 400 for missing required fields', async () => {
+    const { lastInsertRowid } = db.prepare(
+      'INSERT INTO appointments (agent_id, ailment_id, therapy_id, scheduled_at, status) VALUES (?, ?, ?, ?, ?)'
+    ).run(agentId, ailmentId, therapyId, '2026-05-01T10:00:00', 'scheduled')
+    const res = await app.request(`/api/appointments/${lastInsertRowid}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    })
+    expect(res.status).toBe(400)
   })
 })
 
